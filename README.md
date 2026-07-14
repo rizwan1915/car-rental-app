@@ -1,16 +1,36 @@
-# React + Vite
+# DriveRent — Car Rental Booking App
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A full-stack car rental web app where users can browse available cars, search by dates or keyword, and book instantly. Includes authentication, real-time availability updates, and an admin panel for managing the car fleet.
 
-Currently, two official plugins are available:
+**Live demo:** https://car-rental-app-blush-nine.vercel.app/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+- **Authentication** — sign up / log in with Supabase Auth. Browsing and booking are gated behind login.
+- **Car listings** — responsive grid of available cars with images, ratings, seats, transmission, and daily price.
+- **Search** — filter cars by pick-up/return date (checks against existing bookings) or by name/brand keyword.
+- **Booking flow** — logged-in users can book a car; availability updates instantly (optimistic UI + database write).
+- **Admin panel** — password-protected panel to add new cars and manually toggle availability.
+- **Responsive design** — grid adapts from 3 columns on desktop down to 1 column on mobile.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tech Stack
 
-## Expanding the Oxlint configuration
+- **Frontend:** React (Vite)
+- **Backend / Database:** Supabase (PostgreSQL, Auth, Row Level Security)
+- **Styling:** Plain CSS
+- **Deployment:** Vercel (auto-deploys from `main`)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## Running Locally
+
+```bash
+git clone https://github.com/rizwan1915/car-rental-app.git
+cd car-rental-app
+npm install
+npm run dev
+```
+
+The app expects a Supabase project with `cars` and `bookings` tables. Update `src/supabaseClient.js` with your own Supabase URL and anon key if you're running your own instance.
+
+## Notes
+
+This is a demo/portfolio project — the admin password is intentionally simple and not meant to represent production-grade security practices.
