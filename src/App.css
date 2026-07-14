@@ -345,6 +345,36 @@ body {
   width: 160px;
 }
 
+.login-gate {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.88)),
+    url('https://images.unsplash.com/photo-1572885804161-758436fcc8bd?w=1920&q=80&auto=format&fit=crop') center/cover no-repeat;
+}
+
+.login-gate-card {
+  background: #1a1a1a;
+  border: 1px solid #2e2e2e;
+  border-radius: 14px;
+  padding: 36px;
+  width: 100%;
+  max-width: 360px;
+  text-align: center;
+  box-shadow: 0 0 60px rgba(230, 57, 70, 0.08), 0 8px 30px rgba(0, 0, 0, 0.6);
+}
+
+.login-gate-card .section-title {
+  text-align: left;
+}
+
+.login-gate-card form {
+  text-align: left;
+}
+
 .text-search-bar {
   max-width: 500px;
   margin: 14px auto 0;

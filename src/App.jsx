@@ -77,15 +77,23 @@ function App() {
       console.error('Error creating booking:', error)
       setMessage('Something went wrong. Please try again.')
     } else {
+      // Update local state immediately so the UI reflects the change right away
+      setCars((prev) =>
+        prev.map((c) => (c.id === selectedCar.id ? { ...c, available: false } : c))
+      )
+      setFilteredCars((prev) =>
+        prev.map((c) => (c.id === selectedCar.id ? { ...c, available: false } : c))
+      )
+
       const { error: updateError } = await supabase
         .from('cars')
         .update({ available: false })
         .eq('id', selectedCar.id)
       if (updateError) {
-        console.error('Error updating car availability:', updateError)
+        console.error('Error updating car availability in database:', updateError)
       }
+
       setMessage('Booking submitted successfully!')
-      fetchCars()
       setTimeout(() => {
         closeBookingForm()
       }, 1500)
@@ -190,6 +198,45 @@ function App() {
       )
     : baseList
 
+  if (!session) {
+    return (
+      <div className="login-gate">
+        <div className="login-gate-card">
+          <div className="logo" style={{ marginBottom: '20px' }}>Drive<span>Rent</span></div>
+          <div className="section-title">{authMode === 'login' ? 'Log In' : 'Sign Up'}</div>
+          <form onSubmit={handleAuthSubmit}>
+            <input
+              className="input"
+              type="email"
+              placeholder="Email"
+              value={authEmail}
+              onChange={(e) => setAuthEmail(e.target.value)}
+              required
+            />
+            <input
+              className="input"
+              type="password"
+              placeholder="Password"
+              value={authPassword}
+              onChange={(e) => setAuthPassword(e.target.value)}
+              required
+            />
+            <button className="btn" type="submit" style={{ width: '100%' }}>
+              {authMode === 'login' ? 'Log In' : 'Sign Up'}
+            </button>
+          </form>
+          <p className="switch-text">
+            {authMode === 'login' ? "Don't have an account?" : 'Already have an account?'}{' '}
+            <button onClick={() => setAuthMode(authMode === 'login' ? 'signup' : 'login')}>
+              {authMode === 'login' ? 'Sign Up' : 'Log In'}
+            </button>
+          </p>
+          {authMessage && <p className="form-message">{authMessage}</p>}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="app">
       <div className="header">
@@ -238,46 +285,12 @@ function App() {
       </div>
 
       <div className="top-row">
-        {session ? (
-          <div className="card auth-card">
-            <p style={{ margin: '0 0 10px', fontSize: '14px' }}>
-              Logged in as <strong>{session.user.email}</strong>
-            </p>
-            <button className="btn btn-outline btn-small" onClick={handleLogout}>Log Out</button>
-          </div>
-        ) : (
-          <div className="card auth-card">
-            <div className="section-title">{authMode === 'login' ? 'Log In' : 'Sign Up'}</div>
-            <form onSubmit={handleAuthSubmit}>
-              <input
-                className="input"
-                type="email"
-                placeholder="Email"
-                value={authEmail}
-                onChange={(e) => setAuthEmail(e.target.value)}
-                required
-              />
-              <input
-                className="input"
-                type="password"
-                placeholder="Password"
-                value={authPassword}
-                onChange={(e) => setAuthPassword(e.target.value)}
-                required
-              />
-              <button className="btn" type="submit" style={{ width: '100%' }}>
-                {authMode === 'login' ? 'Log In' : 'Sign Up'}
-              </button>
-            </form>
-            <p className="switch-text">
-              {authMode === 'login' ? "Don't have an account?" : 'Already have an account?'}{' '}
-              <button onClick={() => setAuthMode(authMode === 'login' ? 'signup' : 'login')}>
-                {authMode === 'login' ? 'Sign Up' : 'Log In'}
-              </button>
-            </p>
-            {authMessage && <p className="form-message">{authMessage}</p>}
-          </div>
-        )}
+        <div className="card auth-card">
+          <p style={{ margin: '0 0 10px', fontSize: '14px' }}>
+            Logged in as <strong>{session.user.email}</strong>
+          </p>
+          <button className="btn btn-outline btn-small" onClick={handleLogout}>Log Out</button>
+        </div>
 
         {showAdmin && !adminUnlocked && (
           <div className="card admin-card">
@@ -364,9 +377,6 @@ function App() {
                   )}
                 </div>
               </div>
-              {car.available && !session && (
-                <p className="login-hint">Log in to book this car</p>
-              )}
             </div>
           </div>
         ))}
